@@ -1,0 +1,230 @@
+[
+  {
+    "parent": "00000000-0000-4000-8000-000000000000",
+    "name": "default",
+    "rule": [
+      "and",
+      [
+        "~",
+        "name",
+        ".*"
+      ]
+    ],
+    "variables": {},
+    "id": "00000000-0000-4000-8000-000000000000",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {}
+  },
+  {
+    "parent": "00000000-0000-4000-8000-000000000000",
+    "name": "30days",
+    "rule": [
+      "and",
+      [
+        "<=",
+        [
+          "facts",
+          "uptime_days"
+        ],
+        "30"
+      ]
+    ],
+    "variables": {},
+    "id": "2d38f20b-297f-40f7-8f92-37eb333e4436",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {
+      "nagios": {
+        "source_dir": "puppet:///"
+      },
+      "php": {}
+    }
+  },
+  {
+    "parent": "9c476b68-74dc-4c9d-9d2b-357262b58f5a",
+    "name": "roles-webserver",
+    "rule": [
+      "and",
+      [
+        "~",
+        [
+          "facts",
+          "certname"
+        ],
+        "web\\d+"
+      ]
+    ],
+    "variables": {},
+    "id": "31b993cc-b8a3-4421-8a23-97da88601a94",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {
+      "Profile::Logging::Web": {}
+    }
+  },
+  {
+    "description": "This matches hostnames which start with 'qa', as all the VMs and real systems in the QA lab do.",
+    "parent": "841d9348-5a52-459b-b25e-245062af670a",
+    "name": "environments-qa",
+    "rule": [
+      "and",
+      [
+        "~",
+        [
+          "facts",
+          "certname"
+        ],
+        "^qa"
+      ]
+    ],
+    "variables": {},
+    "id": "56a2749b-b4fe-4104-ac5b-6871926c31df",
+    "environment_trumps": true,
+    "environment": "qa",
+    "classes": {}
+  },
+  {
+    "parent": "00000000-0000-4000-8000-000000000000",
+    "name": "environments-root",
+    "rule": [
+      "and",
+      [
+        "=",
+        [
+          "facts",
+          "certname"
+        ],
+        "*"
+      ]
+    ],
+    "variables": {},
+    "id": "841d9348-5a52-459b-b25e-245062af670a",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {}
+  },
+  {
+    "description": "Crazy DB server that inherits from dbserver",
+    "parent": "c318d4cf-3805-4593-a978-d931d69f7785",
+    "name": "roles-dbsuperserver",
+    "rule": [
+      "and",
+      [
+        "~",
+        [
+          "facts",
+          "certname"
+        ],
+        "db001"
+      ]
+    ],
+    "variables": {},
+    "id": "8f733d19-7d7a-4859-9ace-9a8327fe0a7c",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {
+      "Profile::Pgpool2::Pcp": {}
+    }
+  },
+  {
+    "description": "Root for the 'roles' tree -- contains classes / parameters that every host should get, regardless of its role.",
+    "parent": "00000000-0000-4000-8000-000000000000",
+    "name": "roles-root",
+    "variables": {},
+    "id": "9c476b68-74dc-4c9d-9d2b-357262b58f5a",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {
+      "Profile::Base": {}
+    }
+  },
+  {
+    "description": "This an example group for showing pinned nodes.",
+    "parent": "00000000-0000-4000-8000-000000000000",
+    "name": "Pinned nodes example",
+    "rule": [
+      "or",
+      [
+        "or",
+        [
+          "=",
+          [
+            "facts",
+            "is_virtual"
+          ],
+          "true"
+        ],
+        [
+          "not",
+          [
+            "=",
+            "name",
+            "puppetlabs.com"
+          ]
+        ]
+      ],
+      [
+        "=",
+        "name",
+        "test.example.com"
+      ],
+      [
+        "=",
+        "name",
+        "test2.example.com"
+      ]
+    ],
+    "variables": {},
+    "id": "bf1d70d5-8478-0000-806b-d6510e907ea9",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {
+      "nagios": {
+        "source_dir": "bar"
+      }
+    }
+  },
+  {
+    "parent": "9c476b68-74dc-4c9d-9d2b-357262b58f5a",
+    "name": "roles-dbserver",
+    "rule": [
+      "and",
+      [
+        "~",
+        [
+          "facts",
+          "certname"
+        ],
+        "db\\d+"
+      ]
+    ],
+    "variables": {},
+    "id": "c318d4cf-3805-4593-a978-d931d69f7785",
+    "environment_trumps": false,
+    "environment": "production",
+    "classes": {
+      "Profile::Pgpool2": {}
+    }
+  },
+  {
+    "parent": "841d9348-5a52-459b-b25e-245062af670a",
+    "name": "environments-dev",
+    "rule": [
+      "and",
+      [
+        "~",
+        [
+          "facts",
+          "certname"
+        ],
+        "^dev-"
+      ]
+    ],
+    "variables": {},
+    "id": "e63842e3-2762-4ce3-afdc-5070d7e9bbf4",
+    "environment_trumps": true,
+    "environment": "development",
+    "classes": {}
+  }
+]
